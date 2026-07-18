@@ -766,6 +766,190 @@
             margin-top: 0.5rem;
             letter-spacing: 0.5px;
         }
+
+        /* 共有URL・タイプ図鑑・タイプ別テーマ */
+        .share-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            margin-top: 0.75rem;
+        }
+
+        .share-note {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: right;
+            margin-top: 0.4rem;
+            word-break: break-all;
+        }
+
+        .catalog-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+        }
+
+        .catalog-modal.open {
+            display: block;
+        }
+
+        .catalog-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(6px);
+        }
+
+        .catalog-panel {
+            position: relative;
+            width: min(1100px, calc(100% - 2rem));
+            max-height: calc(100vh - 4rem);
+            margin: 2rem auto;
+            background: rgba(18, 15, 22, 0.96);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .catalog-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .catalog-head h2 {
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            color: var(--text-main);
+        }
+
+        .catalog-head p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .catalog-close {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.15);
+            color: var(--text-main);
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+        }
+
+        .catalog-filters {
+            padding: 0.9rem 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .filter-chip {
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.03);
+            color: var(--text-muted);
+            border-radius: 999px;
+            padding: 0.35rem 0.7rem;
+            font-size: 0.72rem;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .filter-chip.active {
+            color: var(--bg-color);
+            background: var(--accent-gold);
+            border-color: var(--accent-gold);
+        }
+
+        .catalog-grid-wrap {
+            overflow-y: auto;
+            padding: 1.25rem 1.5rem 1.5rem;
+        }
+
+        .catalog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 0.9rem;
+        }
+
+        .type-card {
+            border: 1px solid rgba(255,255,255,0.09);
+            border-radius: 14px;
+            overflow: hidden;
+            background: rgba(255,255,255,0.03);
+            position: relative;
+        }
+
+        .type-card.current {
+            outline: 2px solid var(--accent-gold);
+            box-shadow: 0 0 24px var(--accent-glow);
+        }
+
+        .type-card-img {
+            height: 92px;
+            background-size: cover;
+            background-position: center;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            position: relative;
+        }
+
+        .type-card-img::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 40%, rgba(11,9,12,0.85));
+        }
+
+        .type-card-body {
+            padding: 0.8rem;
+        }
+
+        .type-card-code {
+            font-size: 0.78rem;
+            letter-spacing: 2px;
+            color: var(--accent-gold);
+            font-weight: 700;
+        }
+
+        .type-card-name {
+            font-size: 0.88rem;
+            color: var(--text-main);
+            margin-top: 0.3rem;
+            line-height: 1.5;
+        }
+
+        .type-card-sub {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        @media (max-width: 768px) {
+            .catalog-panel {
+                width: calc(100% - 1rem);
+                max-height: calc(100vh - 2rem);
+                margin: 1rem auto;
+            }
+            .catalog-grid {
+                grid-template-columns: 1fr;
+            }
+            .share-actions {
+                justify-content: stretch;
+            }
+            .share-actions .btn {
+                width: 100%;
+                margin-left: 0 !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -820,7 +1004,10 @@
                 <p class="intro-text">
                     あなたと、あなたの隣にいるパートナー。二人の精神的な距離感（マインド）と、それを閉じ込めるシステム（檻）の構造を分析し、全64タイプからあなたの構築している「鳥籠」の形を解き明かします。
                 </p>
-                <button class="btn" onclick="startDiagnostic()">診断を開始する</button>
+                <div style="display:flex; gap:0.6rem; justify-content:center; flex-wrap:wrap;">
+                    <button class="btn" onclick="startDiagnostic()">診断を開始する</button>
+                    <button class="btn btn-secondary" onclick="openCatalog()">タイプ図鑑</button>
+                </div>
             </div>
 
             <!-- 2. 質問画面 -->
@@ -991,11 +1178,34 @@
                         <div class="result-footer">
                             <button class="btn" onclick="saveResultImage()">結果を画像で保存</button>
                             <button class="btn" onclick="restartDiagnostic()" style="margin-left: 0.5rem;">もう一度診断する</button>
+                            <div class="share-actions">
+                                <button class="btn btn-secondary" onclick="copyShareUrl()">共有URLをコピー</button>
+                                <button class="btn btn-secondary" onclick="openCatalog()">図鑑で見る</button>
+                            </div>
+                            <div class="share-note" id="share-url-note">結果が確定すると共有URLが発行されます。</div>
                         </div>
                     </div>
                 </div>
             </div>
 
+        </div>
+    </div>
+
+    <!-- タイプ図鑑モーダル -->
+    <div id="catalog-modal" class="catalog-modal" aria-hidden="true">
+        <div class="catalog-backdrop" onclick="closeCatalog()"></div>
+        <div class="catalog-panel">
+            <div class="catalog-head">
+                <div>
+                    <h2>タイプ図鑑</h2>
+                    <p>全64タイプの一覧。軸の絞り込みと、現在の診断結果のハイライトに対応。</p>
+                </div>
+                <button class="catalog-close" onclick="closeCatalog()">閉じる</button>
+            </div>
+            <div class="catalog-filters" id="catalog-filters"></div>
+            <div class="catalog-grid-wrap">
+                <div class="catalog-grid" id="catalog-grid"></div>
+            </div>
         </div>
     </div>
 
@@ -1130,6 +1340,31 @@
             "FCS": "🕊️", "FCF": "🍂", "FDS": "📜", "FDF": "🌌"
         };
 
+        // タイプ別イラストとテーマ
+        const typeImageMap = {
+            "LCS": "ilust/MBTI結果用/LCS001.png",
+            "LCF": "ilust/MBTI結果用/LCF002.png",
+            "LDS": "ilust/MBTI結果用/LDS003.png",
+            "LDF": "ilust/MBTI結果用/LDF004.png",
+            "FCS": "ilust/MBTI結果用/FCS005.png",
+            "FCF": "ilust/MBTI結果用/FCF006.png",
+            "FDS": "ilust/MBTI結果用/FDS007.png",
+            "FDF": "ilust/MBTI結果用/FDF008.png"
+        };
+
+        const typeThemes = {
+            "LCS": { gold: "#d4af37", purple: "#7a5c8f", glow: "rgba(212, 175, 55, 0.28)" },
+            "LCF": { gold: "#e0b34a", purple: "#8f3f63", glow: "rgba(143, 63, 99, 0.30)" },
+            "LDS": { gold: "#8fd6e8", purple: "#3f6f8f", glow: "rgba(143, 214, 232, 0.24)" },
+            "LDF": { gold: "#d8d8d8", purple: "#8f8fa3", glow: "rgba(216, 216, 216, 0.22)" },
+            "FCS": { gold: "#f2b8c6", purple: "#b76e8f", glow: "rgba(242, 184, 198, 0.26)" },
+            "FCF": { gold: "#d8a15c", purple: "#8f6a4f", glow: "rgba(216, 161, 92, 0.24)" },
+            "FDS": { gold: "#c8b78a", purple: "#5f6f8f", glow: "rgba(200, 183, 138, 0.22)" },
+            "FDF": { gold: "#9fb7ff", purple: "#4f5f9f", glow: "rgba(159, 183, 255, 0.24)" }
+        };
+
+        const defaultTheme = { gold: "#d4af37", purple: "#7a5c8f", glow: "rgba(122, 92, 143, 0.3)" };
+
         // 状態変数
         let currentQuestionIndex = 0;
         let answers = Array(questions.length).fill(null);
@@ -1166,6 +1401,7 @@
         }
 
         function restartDiagnostic() {
+            resetTheme();
             switchScreen('intro');
         }
 
@@ -1249,6 +1485,12 @@
             const mindCode = `${m1}${m2}${m3}`;
             const systemCode = `${s1}${s2}${s3}`;
             const fullCode = `${mindCode}-${systemCode}`;
+            const answerKey = answers.join('');
+            const baseUrl = location.href.split('?')[0];
+            const shareUrl = `${baseUrl}?a=${answerKey}`;
+            currentResultCode = fullCode;
+
+            applyTheme(mindCode);
 
             // 結果表示用データの取得
             const mindInfo = mindTypes[mindCode];
@@ -1281,21 +1523,9 @@
             const pctSM = calcPct(scores.SM);
             const pctPC = calcPct(scores.PC);
 
-            // 画像マッピング
-            const imageMap = {
-                "LCS": "ilust/MBTI結果用/LCS001.png",
-                "LCF": "ilust/MBTI結果用/LCF002.png",
-                "LDS": "ilust/MBTI結果用/LDS003.png",
-                "LDF": "ilust/MBTI結果用/LDF004.png",
-                "FCS": "ilust/MBTI結果用/FCS005.png",
-                "FCF": "ilust/MBTI結果用/FCF006.png",
-                "FDS": "ilust/MBTI結果用/FDS007.png",
-                "FDF": "ilust/MBTI結果用/FDF008.png"
-            };
-
             const container = document.getElementById('result-illustration-container');
             const placeholder = document.getElementById('illustration-placeholder');
-            const imageUrl = imageMap[mindCode];
+            const imageUrl = typeImageMap[mindCode];
 
             // DOMへ流し込み
             document.getElementById('result-code').innerText = fullCode;
@@ -1305,6 +1535,10 @@
             document.getElementById('result-system-desc').innerText = systemInfo.desc;
             document.getElementById('result-icon').innerText = icon;
             document.getElementById('compat-type').innerText = compatText;
+
+            const shareNote = document.getElementById('share-url-note');
+            if (shareNote) shareNote.innerText = shareUrl;
+            if (window.history && history.replaceState) history.replaceState(null, '', `?a=${answerKey}`);
 
             // キャプチャ用DOMへ流し込み
             document.getElementById('capture-code').innerText = fullCode;
@@ -1373,6 +1607,132 @@
                 alert('画像の生成に失敗しました。もう一度お試しください。');
             });
         }
+
+        // タイプ別テーマ適用
+        function applyTheme(mindCode) {
+            const theme = typeThemes[mindCode] || defaultTheme;
+            const root = document.documentElement;
+            root.style.setProperty('--accent-gold', theme.gold);
+            root.style.setProperty('--accent-purple', theme.purple);
+            root.style.setProperty('--accent-glow', theme.glow);
+            root.style.setProperty('--border-color', theme.gold + '26');
+            root.style.setProperty('--border-hover', theme.gold + '66');
+            document.body.style.backgroundImage = `radial-gradient(circle at 10% 20%, ${theme.purple}26 0%, transparent 40%), radial-gradient(circle at 90% 80%, ${theme.gold}14 0%, transparent 40%)`;
+        }
+
+        function resetTheme() {
+            const root = document.documentElement;
+            root.style.setProperty('--accent-gold', defaultTheme.gold);
+            root.style.setProperty('--accent-purple', defaultTheme.purple);
+            root.style.setProperty('--accent-glow', defaultTheme.glow);
+            root.style.setProperty('--border-color', 'rgba(212, 175, 55, 0.15)');
+            root.style.setProperty('--border-hover', 'rgba(212, 175, 55, 0.4)');
+            document.body.style.backgroundImage = '';
+        }
+
+        // 共有URLコピー
+        function copyShareUrl() {
+            const note = document.getElementById('share-url-note');
+            const url = note ? note.innerText : '';
+            if (!url || url.indexOf('http') !== 0) {
+                alert('共有URLがまだ発行されていません。');
+                return;
+            }
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(() => {
+                    alert('共有URLをコピーしました。');
+                }).catch(() => fallbackCopy(url));
+            } else {
+                fallbackCopy(url);
+            }
+        }
+
+        function fallbackCopy(text) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            alert('共有URLをコピーしました。');
+        }
+
+        // タイプ図鑑
+        let currentResultCode = '';
+        const catalogState = { LF: null, CD: null, SF: null, RO: null, SM: null, PC: null };
+        const axisFilters = [
+            { key: 'LF', label: '主導権', options: ['L','F'] },
+            { key: 'CD', label: '距離感', options: ['C','D'] },
+            { key: 'SF', label: '役割期待', options: ['S','F'] },
+            { key: 'RO', label: '世界接続', options: ['R','O'] },
+            { key: 'SM', label: '構成規模', options: ['S','M'] },
+            { key: 'PC', label: '記憶設計', options: ['P','C'] }
+        ];
+
+        function openCatalog() {
+            renderCatalogFilters();
+            renderCatalog();
+            document.getElementById('catalog-modal').classList.add('open');
+        }
+
+        function closeCatalog() {
+            document.getElementById('catalog-modal').classList.remove('open');
+        }
+
+        function renderCatalogFilters() {
+            const wrap = document.getElementById('catalog-filters');
+            wrap.innerHTML = '';
+            axisFilters.forEach(axis => {
+                const allBtn = document.createElement('button');
+                allBtn.className = 'filter-chip' + (catalogState[axis.key] === null ? ' active' : '');
+                allBtn.innerText = axis.label + '：すべて';
+                allBtn.onclick = () => { catalogState[axis.key] = null; renderCatalogFilters(); renderCatalog(); };
+                wrap.appendChild(allBtn);
+                axis.options.forEach(opt => {
+                    const btn = document.createElement('button');
+                    btn.className = 'filter-chip' + (catalogState[axis.key] === opt ? ' active' : '');
+                    btn.innerText = axis.label + '：' + opt;
+                    btn.onclick = () => { catalogState[axis.key] = opt; renderCatalogFilters(); renderCatalog(); };
+                    wrap.appendChild(btn);
+                });
+            });
+        }
+
+        function renderCatalog() {
+            const grid = document.getElementById('catalog-grid');
+            grid.innerHTML = '';
+            Object.keys(mindTypes).forEach(m => {
+                Object.keys(systemTypes).forEach(s => {
+                    const letters = { LF: m[0], CD: m[1], SF: m[2], RO: s[0], SM: s[1], PC: s[2] };
+                    for (const key in catalogState) {
+                        if (catalogState[key] && letters[key] !== catalogState[key]) return;
+                    }
+                    const code = `${m}-${s}`;
+                    const card = document.createElement('div');
+                    card.className = 'type-card' + (code === currentResultCode ? ' current' : '');
+                    const img = document.createElement('div');
+                    img.className = 'type-card-img';
+                    img.style.backgroundImage = `url('${typeImageMap[m]}')`;
+                    const body = document.createElement('div');
+                    body.className = 'type-card-body';
+                    body.innerHTML = `<div class="type-card-code">${typeIcons[m]} ${code}</div><div class="type-card-name">${mindTypes[m].name} × ${systemTypes[s].name}</div><div class="type-card-sub">${letters.LF}${letters.CD}${letters.SF} / ${letters.RO}${letters.SM}${letters.PC}</div>`;
+                    card.appendChild(img);
+                    card.appendChild(body);
+                    grid.appendChild(card);
+                });
+            });
+        }
+
+        // 共有URLからの復元
+        function restoreFromQuery() {
+            const params = new URLSearchParams(location.search);
+            const a = params.get('a');
+            if (!a || !/^[1-5]{24}$/.test(a)) return;
+            answers = a.split('').map(Number);
+            calculateResult();
+        }
+
+        restoreFromQuery();
     </script>
 </body>
 </html>
